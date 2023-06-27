@@ -1,35 +1,31 @@
+
+//8
 import java.applet.Applet;
-import java.awt.Button;
-import java.awt.Graphics;
-import java.awt.Label;
-import java.awt.TextField;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
 public class StudentReportApplet extends Applet implements ActionListener {
+
     private TextField nameField, rollNumberField, marksField;
     private Button submitButton, clearButton;
-    private String report;
+    private ArrayList<String> reports = new ArrayList<>();
 
     @Override
     public void init() {
-        // Create labels and text fields
         Label nameLabel = new Label("Name:");
-        nameField = new TextField(20);
+        nameField = new TextField(30);
         Label rollNumberLabel = new Label("Roll Number:");
-        rollNumberField = new TextField(10);
+        rollNumberField = new TextField(30);
         Label marksLabel = new Label("Marks:");
-        marksField = new TextField(3);
+        marksField = new TextField(30);
 
-        // Create buttons
         submitButton = new Button("Submit");
         clearButton = new Button("Clear");
 
-        // Add action listeners to buttons
         submitButton.addActionListener(this);
         clearButton.addActionListener(this);
 
-        // Add components to the applet
         add(nameLabel);
         add(nameField);
         add(rollNumberLabel);
@@ -43,38 +39,38 @@ public class StudentReportApplet extends Applet implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submitButton) {
-            // Get input values from text fields
             String name = nameField.getText();
             String rollNumber = rollNumberField.getText();
             int marks = Integer.parseInt(marksField.getText());
 
-            // Generate the student report
-            report = "Name: " + name + "\n"
-                    + "Roll Number: " + rollNumber + "\n"
-                    + "Marks: " + marks;
-
-            // Repaint the applet to display the report
-            repaint();
-        } else if (e.getSource() == clearButton) {
-            // Clear the text fields and report
             nameField.setText("");
             rollNumberField.setText("");
             marksField.setText("");
-            report = "";
 
-            // Repaint the applet to clear the report
+            String report = "Name: " + name + "\t" + "Roll Number: " + rollNumber + "\t" + "Marks: " + marks;
+            reports.add(report);
+
+            repaint();
+        } else if (e.getSource() == clearButton) {
+
+            nameField.setText("");
+            rollNumberField.setText("");
+            marksField.setText("");
+            reports.clear();
+
             repaint();
         }
     }
 
     @Override
     public void paint(Graphics g) {
-        super.paint(g);
-
-        // Display the student report
-        if (report != null && !report.isEmpty()) {
+        int yPos = 120;
+        if (reports.size() >= 1) {
             g.drawString("Student Report:", 10, 100);
-            g.drawString(report, 10, 120);
+            for (String report : reports) {
+                g.drawString(report, 10, yPos);
+                yPos += 30;
+            }
         }
     }
 }
